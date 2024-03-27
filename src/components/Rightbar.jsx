@@ -18,7 +18,7 @@ const Rightbar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8081/locationdatapoints');
+        const response = await fetch('http://192.168.50.112:8081/locationdatapoints');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
