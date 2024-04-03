@@ -16,6 +16,7 @@ const Login = ({ onClose }) => {
   const [title, setTitle] = useState('Login');
   const [isRegister, setIsRegister] = useState(false);
   const [showRightbar, setShowRightbar] = useState(false); // State to control showing Rightbar
+  const [isRegistered, setIsRegistered] = useState(false); // State to track successful registration
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
@@ -24,7 +25,13 @@ const Login = ({ onClose }) => {
     e.preventDefault();
     // Simulate successful submission
     // For demonstration purposes, assume submission is always successful
-    setShowRightbar(true); // Show Rightbar upon successful submission
+    if (isRegister) {
+      setIsRegistered(true); // Update state to indicate successful registration
+      setIsRegister(false); // Switch back to login mode
+      setTitle('Login'); // Change dialog title back to 'Login'
+    } else {
+      setShowRightbar(true); // Show Rightbar upon successful login
+    }
   };
 
   const handleClose = () => {
@@ -34,6 +41,36 @@ const Login = ({ onClose }) => {
   // If Rightbar should be shown, render it instead of the Login dialog
   if (showRightbar) {
     return <Rightbar />;
+  }
+
+  // If user has successfully registered, show a message and reset registration form
+  if (isRegistered) {
+    return (
+      <Dialog open={true}>
+        <DialogTitle>
+          Registration Successful
+          <IconButton
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+            onClick={handleClose} // Use handleClose function to close the dialog
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText>
+            Your account has been successfully registered. Please login to access your data.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: '19px' }}>
+          <Button onClick={() => setIsRegistered(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    );
   }
 
   return (
@@ -123,4 +160,5 @@ const Login = ({ onClose }) => {
 };
 
 export default Login;
+
 

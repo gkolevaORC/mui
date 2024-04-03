@@ -12,7 +12,7 @@ app.use(cors());
 const config = {
     user: process.env.DB_USER || 'remote',
     password: process.env.DB_PASSWORD || 'obi4amYazo99',
-    server: process.env.DB_SERVER || '192.168.50.112',
+    server: process.env.DB_SERVER || '192.168.50.112\SQLEXPRESS02',
     database: process.env.DB_NAME || 'OdiData',
     port: 1433,
     synchronize: true,
@@ -33,8 +33,11 @@ app.use(express.static(buildPath));
 app.get('/api/locationdatapoints', async (req, res) => {
     try {
         let pool = await sql.connect(config);
-        let result = await pool.request().query('SELECT * FROM LocationDataPointsDataHistory');
-        res.json(result.recordset);
+        let result = await pool.request().query(`
+        SELECT ID, PointID, PointName, Value, CONVERT(varchar, TimeStamp, 0) AS TimeStamp
+        FROM LocationDataPointsDataHistory
+    `);
+            res.json(result.recordset);
     } catch (error) {
         console.error('Error executing SQL query:', error);
         res.status(500).json({ error: 'Internal Server Error' });

@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar, GridToolbarExport } from '@mui/x-data-grid';
 import React, { useState, useEffect } from 'react';
 
 const columns = [
@@ -18,7 +18,7 @@ const Rightbar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.50.112:8081/locationdatapoints');
+        const response = await fetch('http://localhost:8081/locationdatapoints');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -61,7 +61,14 @@ const Rightbar = () => {
         rows={data}
         columns={columns}
         pageSize={5}
-        components={{ Toolbar: CustomToolbar }}
+        components={{
+          Toolbar: CustomToolbar
+        }}
+        componentsProps={{
+          toolbar: {
+            printOptions: { disableToolbarButton: true },
+          },
+        }}
       />
     </Box>
   );
@@ -78,9 +85,3 @@ const CustomToolbar = ({ handleExportCsv }) => {
 };
 
 export default Rightbar;
-
-
-
-
-
-
